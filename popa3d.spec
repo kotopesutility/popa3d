@@ -1,9 +1,9 @@
-# $Id: popa3d.spec,v 1.10 2001/11/16 03:09:22 solar Exp $
+# $Id: popa3d.spec,v 1.11 2002/02/06 22:52:45 mci Exp $
 
 Summary: Post Office Protocol server.
 Name: popa3d
-Version: 0.5
-Release: owl2
+Version: 0.5.0.1
+Release: owl1
 License: relaxed BSD and (L)GPL-compatible
 Group: System Environment/Daemons
 Source0: ftp://ftp.openwall.com/pub/projects/popa3d/popa3d-%{version}.tar.gz
