@@ -1,0 +1,5 @@
+copy: *.h
+copy: *.pamd
+copy: *.patch
+copy: *.xinetd
+tar.bz2: popa3d

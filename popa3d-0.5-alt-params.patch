@@ -1,0 +1,29 @@
+--- popa3d-0.5~/params.h	Tue Oct 16 08:10:34 2001
++++ popa3d-0.5/params.h	Wed Dec 26 17:14:14 2001
+@@ -139,13 +139,15 @@
+  * AUTH_SHADOW		Use shadow passwords directly (not via PAM);
+  * AUTH_PAM		Use PAM in the old-fashioned way;
+  * AUTH_PAM_USERPASS	Talk to pam_userpass via Linux-PAM binary prompts.
++ * AUTH_LIBPAM_USERPASS	Use libpam_userpass.
+  *
+  * Note that there's no built-in password aging support.
+  */
+ #define AUTH_PASSWD			0
+-#define AUTH_SHADOW			1
++#define AUTH_SHADOW			0
+ #define AUTH_PAM			0
+-#define AUTH_PAM_USERPASS		0
++#define AUTH_PAM_USERPASS		1
++#define AUTH_LIBPAM_USERPASS		1
+ 
+ #if AUTH_PAM || AUTH_PAM_USERPASS
+ #define AUTH_PAM_SERVICE		POP_SERVER
+@@ -160,7 +162,7 @@
+  * it harder (but still far from impossible, on most systems) to check
+  * for valid usernames. Adjust it for your crypt(3).
+  */
+-#define AUTH_DUMMY_SALT			"xx"
++#define AUTH_DUMMY_SALT			"$2a$08$xxxxxxxxxxxxxxxxxxxxxx"
+ 
+ #endif
+ 

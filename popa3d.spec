@@ -1,116 +1,83 @@
-# $Id: popa3d.spec,v 1.15 2002/04/01 21:28:40 solar Exp $
-
-Summary: Post Office Protocol server.
 Name: popa3d
 Version: 0.5.1
-Release: owl1
-License: relaxed BSD and (L)GPL-compatible
-Group: System Environment/Daemons
-Source0: ftp://ftp.openwall.com/pub/projects/popa3d/popa3d-%{version}.tar.gz
-Source1: params.h
-Source2: popa3d.pam
-Source3: popa3d.init
-Source4: popa3d.xinetd
-PreReq: /sbin/chkconfig, /dev/null, grep, shadow-utils
-Requires: /var/empty, tcb, pam_userpass, xinetd
-BuildRoot: /override/%{name}-%{version}
+Release: alt1
+
+Summary: tiny secure POP3 daemon
+License: LGPL
+Group: System/Servers
+Url: http://www.openwall.com/%name/
+
+Source: ftp://ftp.openwall.com/pub/projects/%name/%name-%version.tar.bz2
+Source1: %name-params.h
+Source2: %name.pamd
+Source3: %name.xinetd
+
+Patch1: %name-0.5-alt-params.patch
+Patch2: %name-0.5-alt-libpam_userpass.patch
+
+PreReq: shadow-utils, /var/empty
+
+# Automatically added by buildreq on Wed Dec 26 2001
+BuildRequires: libpam-devel pam_userpass-devel
 
 %description
-popa3d is a tiny Post Office Protocol version 3 (POP3) server with
+This is a tiny Post Office Protocol version 3 (POP3) server with
 security as its primary design goal.
 
 %prep
 %setup -q
-cp $RPM_SOURCE_DIR/params.h params.h
+%patch1 -p1
+%patch2 -p1
 
 %build
-make CFLAGS="-c -Wall $RPM_OPT_FLAGS -DHAVE_PROGNAME" LIBS="-lpam"
+make clean
+%make_build \
+	CFLAGS="-c $RPM_OPT_FLAGS %optflags_notraceback -DHAVE_PROGNAME" \
+	LIBS="-lpam -lpam_userpass"
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
-make install DESTDIR=$RPM_BUILD_ROOT SBINDIR=%_sbindir MANDIR=%_mandir
-
-mkdir -p $RPM_BUILD_ROOT/etc/{pam.d,rc.d/init.d,xinetd.d}
-install -m 600 $RPM_SOURCE_DIR/popa3d.pam \
-	$RPM_BUILD_ROOT/etc/pam.d/popa3d
-install -m 700 $RPM_SOURCE_DIR/popa3d.init \
-	$RPM_BUILD_ROOT/etc/rc.d/init.d/popa3d
-install -m 600 $RPM_SOURCE_DIR/popa3d.xinetd \
-	$RPM_BUILD_ROOT/etc/xinetd.d/popa3d
-
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-%pre
-grep ^popa3d: /etc/group &> /dev/null || groupadd -g 184 popa3d
-grep ^popa3d: /etc/passwd &> /dev/null ||
-	useradd -g popa3d -u 184 -d / -s /bin/false -M popa3d
-rm -f /var/run/popa3d.restart
-if [ $1 -ge 2 ]; then
-	/etc/rc.d/init.d/popa3d status && touch /var/run/popa3d.restart || :
-	/etc/rc.d/init.d/popa3d stop || :
-fi
+install -pD -m750 %name $RPM_BUILD_ROOT%_sbindir/%name
+install -pD -m600 %SOURCE2 $RPM_BUILD_ROOT%_sysconfdir/pam.d/%name
+install -pD -m640 %SOURCE3 $RPM_BUILD_ROOT%_sysconfdir/xinetd.d/%name
 
 %post
-test -f /var/run/popa3d.restart && /etc/rc.d/init.d/popa3d start || :
-rm -f /var/run/popa3d.restart
-
-%preun
-if [ $1 -eq 0 ]; then
-	/etc/rc.d/init.d/popa3d stop || :
-	/sbin/chkconfig --del popa3d
-fi
+/usr/sbin/groupadd -r -f %name >/dev/null 2>&1
+/usr/sbin/useradd -r -g %name -d /dev/null -s /dev/null -n %name >/dev/null 2>&1 ||:
 
 %files
-%defattr(-,root,root)
-%_sbindir/popa3d
-%_mandir/man8/popa3d.8*
-%config(noreplace) /etc/pam.d/popa3d
-%config /etc/rc.d/init.d/popa3d
-%config /etc/xinetd.d/popa3d
-%doc DESIGN LICENSE
+%_sbindir/%name
+%config(noreplace) %_sysconfdir/pam.d/%name
+%config(noreplace) %_sysconfdir/xinetd.d/*
+%doc DESIGN DESIGN VIRTUAL
 
 %changelog
-* Tue Apr 02 2002 Solar Designer <solar@owl.openwall.com>
-- Let the local delivery agent help generate unique ID's by setting the
-X-Delivery-ID: header.
+* Wed Apr 17 2002 Dmitry V. Levin <ldv@alt-linux.org> 0.5.1-alt1
+- Updated to 0.5.1:
+  * Tue Apr 02 2002 Solar Designer <solar@owl.openwall.com>
+  - Let the local delivery agent help generate unique ID's by setting
+    the X-Delivery-ID: header.
 
-* Fri Mar 22 2002 Solar Designer <solar@owl.openwall.com>
-- Re-worked all of the UIDL calculation, adding support for multi-line
-headers and re-considering which headers to use.
+* Mon Mar 25 2002 Dmitry V. Levin <ldv@alt-linux.org> 0.5.0.3-alt1
+- Updated to 0.5.0.3:
+  * Fri Mar 22 2002 Solar Designer <solar@owl.openwall.com>
+  - Re-worked all of the UIDL calculation, adding support for
+    multi-line headers and re-considering which headers to use.
 
-* Thu Feb 07 2002 Michail Litvak <mci@owl.openwall.com>
-- Enforce our new spec file conventions.
+* Tue Jan 08 2002 Dmitry V. Levin <ldv@alt-linux.org> 0.5-alt2
+- Fixed my typo in pamd file made in previous package revision.
 
-* Fri Nov 16 2001 Solar Designer <solar@owl.openwall.com>
-- Use pam_tcb.
+* Wed Dec 26 2001 Dmitry V. Levin <ldv@alt-linux.org> 0.5-alt1
+- 0.5.
+- Added libpam_userpass support.
 
-* Sun Oct 28 2001 Solar Designer <solar@owl.openwall.com>
-- Updated to 0.5 which adds a popa3d(8) man page.
+* Fri Oct 13 2000 Dmitry V. Levin <ldv@fandra.org> 0.4-ipl2
+- Updated:
+  + pam configuration;
+  + rewritten xinet support, dropped inet support.
 
-* Tue Sep 11 2001 Solar Designer <solar@owl.openwall.com>
-- Updated to 0.4.9.4 (fixed two bugs introduced with 0.4.9.2 and 0.4.9.3).
+* Fri Feb 25 2000 Dmitry V. Levin <ldv@fandra.org>
+- 0.4
+- Added PAM authentication.
 
-* Sun Sep 09 2001 Solar Designer <solar@owl.openwall.com>
-- Updated to 0.4.9.3.
-- The same popa3d binary may now be run as a standalone server as well as
-via xinetd, an /etc/xinetd.d file is provided.
-
-* Sun Sep 02 2001 Solar Designer <solar@owl.openwall.com>
-- Updated to 0.4.9.2.
-
-* Wed Jun 20 2001 Solar Designer <solar@owl.openwall.com>
-- Updated to 0.4.9.1 (finally replaced the GNU MD5 routines to relax
-the license for the entire package, solve certain portability issues,
-and reduce code size).
-
-* Mon May 28 2001 Solar Designer <solar@owl.openwall.com>
-- Updated to 0.4.9.
-
-* Thu Dec 07 2000 Solar Designer <solar@owl.openwall.com>
-- Updated popa3d.init to use --expect-user.
-
-* Wed Dec 06 2000 Solar Designer <solar@owl.openwall.com>
-- 0.4.4 with pam_userpass support.
-- Wrote this spec file, popa3d.pam, and popa3d.init.
+* Tue Sep 23 1999 Dmitry V. Levin <ldv@fandra.org>
+- Initial revision.

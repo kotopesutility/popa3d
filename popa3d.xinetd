@@ -1,12 +1,11 @@
 # default: off
-# description: A POP3 server
-
-service pop3
+# description: Tiny secure implementation of POP3 (Post Office Protocol) server.
+service pop-3
 {
+	disable		= yes
 	socket_type	= stream
 	protocol	= tcp
-	user		= root
 	wait		= no
+	user		= root
 	server		= /usr/sbin/popa3d
-	disable		= yes
 }
