@@ -1,3 +1,4 @@
+copy: *.eps
 copy: *.h
 copy: *.pamd
 copy: *.patch
