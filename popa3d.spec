@@ -1,5 +1,5 @@
 Name: popa3d
-Version: 0.6.4
+Version: 0.6.4.1
 Release: alt1
 
 Summary: Tiny secure POP3 daemon
@@ -55,6 +55,9 @@ make clean
 %doc %name.eps.gz
 
 %changelog
+* Mon Jan 03 2005 Dmitry V. Levin <ldv@altlinux.org> 0.6.4.1-alt1
+- Updated to 0.6.4.1.
+
 * Sun Jan 18 2004 Dmitry V. Levin <ldv@altlinux.org> 0.6.4-alt1
 - Updated to 0.6.4:
   * Mon Nov 17 2003 Solar Designer <solar@owl.openwall.com> 0.6.4-owl1
