@@ -1,9 +1,9 @@
-# $Id: popa3d.spec,v 1.37 2003/06/02 03:38:44 solar Exp $
+# $Id: popa3d.spec,v 1.38 2003/10/30 21:15:47 solar Exp $
 
 Summary: Post Office Protocol (POP3) server.
 Name: popa3d
-Version: 0.6.3
-Release: owl3
+Version: 0.6.4
+Release: owl1
 License: relaxed BSD and (L)GPL-compatible
 Group: System Environment/Daemons
 URL: http://www.openwall.com/popa3d/
@@ -72,6 +72,10 @@ fi
 %doc CHANGES CONTACT DESIGN LICENSE
 
 %changelog
+* Mon Nov 17 2003 Solar Designer <solar@owl.openwall.com> 0.6.4-owl1
+- The uses of sprintf(3) have been replaced by the concat() function
+implemented locally.
+
 * Mon Jun 02 2003 Solar Designer <solar@owl.openwall.com> 0.6.3-owl3
 - Added URL.
 
