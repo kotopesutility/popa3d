@@ -1,8 +1,8 @@
-# $Id: popa3d.spec,v 1.28 2003/01/26 17:10:52 solar Exp $
+# $Id: popa3d.spec,v 1.29 2003/02/20 03:42:27 solar Exp $
 
 Summary: Post Office Protocol (POP3) server.
 Name: popa3d
-Version: 0.6
+Version: 0.6.1
 Release: owl1
 License: relaxed BSD and (L)GPL-compatible
 Group: System Environment/Daemons
@@ -72,7 +72,11 @@ fi
 %doc DESIGN LICENSE
 
 %changelog
-* Thu Feb 20 2003 Solar Designer <solar@owl.openwall.com>
+* Sun Mar 02 2003 Solar Designer <solar@owl.openwall.com> 0.6.1-owl1
+- Ensure DB_STALE is set if mailbox_get() fails for that possible reason.
+- Added version.c and the -V option to print out version information.
+
+* Thu Feb 20 2003 Solar Designer <solar@owl.openwall.com> 0.6-owl1
 - pop_reply_multiline() will now return different POP_CRASH_* codes on
 error (both network- and server-related errors are possible there).
 - Let it be 0.6 stable release.
