@@ -1,6 +1,6 @@
 Name: popa3d
-Version: 0.6.3
-Release: alt2
+Version: 0.6.4
+Release: alt1
 
 Summary: Tiny secure POP3 daemon
 License: LGPL
@@ -12,7 +12,9 @@ Source: ftp://ftp.openwall.com/pub/projects/%name/%name-%version.tar.bz2
 Source1: %name-params.h
 Source2: %name.pamd
 Source3: %name.xinetd
-Source4: %name.eps
+# The dia source to %name.eps is available through the download link
+# from http://www.openwall.com/presentations/Owl/
+Source4: %name.eps.gz
 
 Patch: %name-0.6.3-alt-params.patch
 
@@ -22,18 +24,18 @@ PreReq: shadow-utils, /var/empty
 BuildRequires: libpam-devel pam_userpass-devel
 
 %description
-This is a tiny Post Office Protocol version 3 (POP3) server with
-security as its primary design goal.
+This is a tiny Post Office Protocol version 3 (POP3) server
+with security as its primary design goal.
 
 %prep
 %setup -q
 %patch -p1
-%__install -p -m644 $RPM_SOURCE_DIR/%name.eps .
+%__install -p -m644 $RPM_SOURCE_DIR/%name.eps.gz .
 
 %build
 make clean
 %make_build \
-	CFLAGS="-c $RPM_OPT_FLAGS %optflags_notraceback -DHAVE_PROGNAME" \
+	CFLAGS="$RPM_OPT_FLAGS %optflags_notraceback -DHAVE_PROGNAME" \
 	LIBS="-lpam -lpam_userpass"
 
 %install
@@ -50,9 +52,15 @@ make clean
 %config(noreplace) %_sysconfdir/pam.d/%name
 %config(noreplace) %_sysconfdir/xinetd.d/*
 %doc CHANGES CONTACT DESIGN LICENSE VIRTUAL
-%doc %name.eps
+%doc %name.eps.gz
 
 %changelog
+* Sun Jan 18 2004 Dmitry V. Levin <ldv@altlinux.org> 0.6.4-alt1
+- Updated to 0.6.4:
+  * Mon Nov 17 2003 Solar Designer <solar@owl.openwall.com> 0.6.4-owl1
+  - The uses of sprintf(3) have been replaced by the concat() function
+    implemented locally.
+
 * Fri May 23 2003 Dmitry V. Levin <ldv@altlinux.org> 0.6.3-alt2
 - PAM configuration policy enforcement.
 

@@ -1,3 +1,14 @@
+	Changes made between 0.6.3 and 0.6.4 (2003/11/17).
+
+The uses of sprintf(3) have been replaced by the concat() function
+implemented locally.
+
+
+	Changes made between 0.6.2 and 0.6.3 (2003/04/13).
+
+libpam_userpass support (with pam_userpass 0.9+).
+
+
 	Changes made between 0.6.1 and 0.6.2 (2003/03/10).
 
 Rate-limit the "sessions limit reached" log message similarly to the
@@ -66,4 +77,4 @@ code size.
 Added a popa3d(8) manual page based on the one Camiel Dobbelaar wrote
 for OpenBSD.
 
-$Id: CHANGES,v 1.3 2003/03/10 01:28:34 solar Exp $
+$Id: CHANGES,v 1.5 2003/11/16 21:59:14 solar Exp $

@@ -1,4 +1,4 @@
-copy: *.eps
+gzip: *.eps
 copy: *.h
 copy: *.pamd
 copy: *.patch
