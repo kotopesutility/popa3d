@@ -1,8 +1,8 @@
-# $Id: popa3d.spec,v 1.25 2002/09/08 08:59:54 solar Exp $
+# $Id: popa3d.spec,v 1.26 2002/09/08 10:03:20 solar Exp $
 
 Summary: Post Office Protocol (POP3) server.
 Name: popa3d
-Version: 0.5.1.6
+Version: 0.5.9
 Release: owl1
 License: relaxed BSD and (L)GPL-compatible
 Group: System Environment/Daemons
