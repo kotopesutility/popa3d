@@ -1,4 +1,4 @@
-# $Id: popa3d.spec,v 1.30 2003/03/02 03:45:32 solar Exp $
+# $Id: popa3d.spec,v 1.31 2003/03/09 20:06:24 solar Exp $
 
 Summary: Post Office Protocol (POP3) server.
 Name: popa3d
@@ -69,12 +69,14 @@ fi
 %config(noreplace) /etc/pam.d/popa3d
 %config /etc/rc.d/init.d/popa3d
 %config /etc/xinetd.d/popa3d
-%doc DESIGN LICENSE
+%doc CHANGES DESIGN LICENSE
 
 %changelog
 * Sun Mar 09 2003 Solar Designer <solar@owl.openwall.com> 0.6.2-owl1
 - Rate-limit the "sessions limit reached" log message similarly to the
 per-source one; spotted by Michael Tokarev.
+- Started maintaining a non-package-specific popa3d change log due to
+popular demand.
 
 * Sun Mar 02 2003 Solar Designer <solar@owl.openwall.com> 0.6.1-owl1
 - Ensure DB_STALE is set if mailbox_get() fails for that possible reason.
