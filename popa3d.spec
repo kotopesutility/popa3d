@@ -1,4 +1,4 @@
-# $Id: popa3d.spec,v 1.17 2002/05/25 14:38:49 solar Exp $
+# $Id: popa3d.spec,v 1.18 2002/05/27 15:46:09 solar Exp $
 
 Summary: Post Office Protocol server.
 Name: popa3d
@@ -83,7 +83,7 @@ to solve the interoperability problem reported by Yury Trembach on
 fido7.ru.unix.
 
 * Tue Apr 02 2002 Solar Designer <solar@owl.openwall.com>
-- Let the local delivery agent help generate unique ID's by setting the
+- Let the local delivery agent help generate unique IDs by setting the
 X-Delivery-ID: header.
 
 * Fri Mar 22 2002 Solar Designer <solar@owl.openwall.com>
