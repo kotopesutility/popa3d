@@ -1,7 +1,7 @@
 #%PAM-1.0
-auth	required	/lib/security/pam_userpass.so
-auth	required	/lib/security/pam_stack.so service=system-auth-use_first_pass
-auth	required	/lib/security/pam_nologin.so
-account	required	/lib/security/pam_stack.so service=system-auth
-password	required	/lib/security/pam_deny.so
-session	required	/lib/security/pam_deny.so
+auth     required	pam_userpass.so
+auth     include	system-auth-use_first_pass
+auth     required	pam_nologin.so
+account  include	system-auth
+password required	pam_deny.so
+session  required	pam_deny.so

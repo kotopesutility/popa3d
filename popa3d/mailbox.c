@@ -227,6 +227,7 @@ static int mailbox_parse(int init)
 				if (!msg.data_offset) break;
 				msg.raw_size = offset - msg.raw_offset;
 				msg.data_size = offset - body - msg.data_offset;
+				msg.size -= body << 1;
 				MD5_Final(msg.hash, &hash);
 				if (db_op(&msg)) break;
 			}
@@ -319,6 +320,7 @@ static int mailbox_parse(int init)
 		if (!msg.data_offset) return 1;
 		msg.raw_size = offset - msg.raw_offset;
 		msg.data_size = offset - (blank & body) - msg.data_offset;
+		msg.size -= (blank & body) << 1;
 		MD5_Final(msg.hash, &hash);
 		if (db_op(&msg)) return 1;
 
@@ -397,12 +399,19 @@ static int mailbox_changed(void)
 
 int mailbox_get(struct db_message *msg, int lines)
 {
+	int event;
+
 	if (mailbox_changed()) return POP_CRASH_SERVER;
 
-	if (lseek(mailbox_fd, msg->data_offset, SEEK_SET) < 0)
+/* The calls to mailbox_changed() will set DB_STALE if that is the case */
+	if (lseek(mailbox_fd, msg->data_offset, SEEK_SET) < 0) {
+		mailbox_changed();
 		return POP_CRASH_SERVER;
-	if (pop_reply_multiline(mailbox_fd, msg->data_size, lines))
-		return POP_CRASH_NETFAIL;
+	}
+	if ((event = pop_reply_multiline(mailbox_fd, msg->data_size, lines))) {
+		if (event == POP_CRASH_SERVER) mailbox_changed();
+		return event;
+	}
 
 	if (mailbox_changed()) return POP_CRASH_SERVER;
 

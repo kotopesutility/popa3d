@@ -1,5 +1,5 @@
 Name: popa3d
-Version: 0.5.9
+Version: 0.6.3
 Release: alt2
 
 Summary: Tiny secure POP3 daemon
@@ -7,17 +7,14 @@ License: LGPL
 Group: System/Servers
 Url: http://www.openwall.com/%name/
 
-%define real_version 0.5.9
-%define srcname %name-%real_version
-Source: ftp://ftp.openwall.com/pub/projects/%name/%srcname.tar.bz2
+%define srcname %name-%version
+Source: ftp://ftp.openwall.com/pub/projects/%name/%name-%version.tar.bz2
 Source1: %name-params.h
 Source2: %name.pamd
 Source3: %name.xinetd
 Source4: %name.eps
 
-#Patch0: %name-%real_version-%version.patch
-Patch1: %name-0.5-alt-params.patch
-Patch2: %name-0.5-alt-libpam_userpass.patch
+Patch: %name-0.6.3-alt-params.patch
 
 PreReq: shadow-utils, /var/empty
 
@@ -29,10 +26,8 @@ This is a tiny Post Office Protocol version 3 (POP3) server with
 security as its primary design goal.
 
 %prep
-%setup -q -n %srcname
-#%patch0 -p1
-%patch1 -p1
-%patch2 -p1
+%setup -q
+%patch -p1
 %__install -p -m644 $RPM_SOURCE_DIR/%name.eps .
 
 %build
@@ -42,22 +37,55 @@ make clean
 	LIBS="-lpam -lpam_userpass"
 
 %install
-install -pD -m750 %name $RPM_BUILD_ROOT%_sbindir/%name
-install -pD -m600 %SOURCE2 $RPM_BUILD_ROOT%_sysconfdir/pam.d/%name
-install -pD -m640 %SOURCE3 $RPM_BUILD_ROOT%_sysconfdir/xinetd.d/%name
+%__install -pD -m750 %name $RPM_BUILD_ROOT%_sbindir/%name
+%__install -pD -m600 %SOURCE2 $RPM_BUILD_ROOT%_sysconfdir/pam.d/%name
+%__install -pD -m640 %SOURCE3 $RPM_BUILD_ROOT%_sysconfdir/xinetd.d/%name
 
 %post
-/usr/sbin/groupadd -r -f %name >/dev/null 2>&1
+/usr/sbin/groupadd -r -f %name
 /usr/sbin/useradd -r -g %name -d /dev/null -s /dev/null -n %name >/dev/null 2>&1 ||:
 
 %files
 %_sbindir/%name
 %config(noreplace) %_sysconfdir/pam.d/%name
 %config(noreplace) %_sysconfdir/xinetd.d/*
-%doc DESIGN DESIGN VIRTUAL
+%doc CHANGES CONTACT DESIGN LICENSE VIRTUAL
 %doc %name.eps
 
 %changelog
+* Fri May 23 2003 Dmitry V. Levin <ldv@altlinux.org> 0.6.3-alt2
+- PAM configuration policy enforcement.
+
+* Sat Apr 12 2003 Dmitry V. Levin <ldv@altlinux.org> 0.6.3-alt1
+- Updated to 0.6.3:
+  + alt-libpam_userpass patch merged upstream;
+  + built with libpam_userpass.so.1.
+
+* Tue Mar 11 2003 Dmitry V. Levin <ldv@altlinux.org> 0.6.2-alt1
+- Updated to 0.6.2:
+  * Mon Mar 10 2003 Solar Designer <solar@owl.openwall.com> 0.6.2-owl1
+  - Rate-limit the "sessions limit reached" log message similarly to the
+    per-source one; spotted by Michael Tokarev.
+  - Started maintaining a non-package-specific popa3d change log due to
+    popular demand.
+  - Added a separate file with contact information (homepage, mailing list,
+    author e-mail address, commercial support).
+
+* Wed Mar 05 2003 Dmitry V. Levin <ldv@altlinux.org> 0.6.1-alt1
+- Updated to 0.6.1:
+  * Sun Mar 02 2003 Solar Designer <solar@owl.openwall.com> 0.6.1-owl1
+  - Ensure DB_STALE is set if mailbox_get() fails for that possible reason.
+  - Added version.c and the -V option to print out version information.
+
+* Thu Feb 20 2003 Dmitry V. Levin <ldv@altlinux.org> 0.6-alt1
+- Updated to 0.6:
+  * Thu Feb 20 2003 Solar Designer <solar@owl.openwall.com>
+  - pop_reply_multiline() will now return different POP_CRASH_* codes on
+    error (both network- and server-related errors are possible there).
+  * Sun Jan 26 2003 Solar Designer <solar@owl.openwall.com>
+  - Corrected the message size reporting bug introduced with 0.4.9.3 and
+    now reported on popa3d-users by Nuno Teixeira.
+
 * Thu Oct 17 2002 Dmitry V. Levin <ldv@altlinux.org> 0.5.9-alt2
 - Added flow control diagram
   (from Owl CanSecWest/core02 / NordU2002 presentation slides).
