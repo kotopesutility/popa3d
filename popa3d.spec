@@ -1,4 +1,4 @@
-# $Id: popa3d.spec,v 1.46 2005/10/24 03:06:28 solar Exp $
+# $Owl$
 
 Summary: Post Office Protocol (POP3) server.
 Name: popa3d

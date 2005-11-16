@@ -1,5 +1,5 @@
 #%PAM-1.0
-# $Id: popa3d.pam,v 1.5 2005/10/29 17:25:16 ldv Exp $
+# $Owl$
 auth       required	pam_userpass.so
 auth       required	pam_tcb.so use_first_pass shadow fork nolog prefix=$2a$ count=8
 account    include	system-auth
