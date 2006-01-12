@@ -17,12 +17,13 @@
 
 #include <security/pam_appl.h>
 
-#if defined(__sun__) && !defined(LINUX_PAM)
-#define linux_const			/* Sun's PAM doesn't use const here */
+#if (defined(__sun) || defined(__hpux)) && \
+    !defined(LINUX_PAM) && !defined(_OPENPAM)
+#define lo_const			/* Sun's PAM doesn't use const here */
 #else
-#define linux_const			const
+#define lo_const			const
 #endif
-typedef linux_const void *pam_item_t;
+typedef lo_const void *pam_item_t;
 
 #if USE_LIBPAM_USERPASS
 #include <security/pam_userpass.h>
@@ -53,7 +54,7 @@ typedef struct {
 	char *pass;
 } pam_userpass_t;
 
-static int pam_userpass_conv(int num_msg, linux_const struct pam_message **msg,
+static int pam_userpass_conv(int num_msg, lo_const struct pam_message **msg,
 	struct pam_response **resp, void *appdata_ptr)
 {
 	pam_userpass_t *userpass = (pam_userpass_t *)appdata_ptr;
@@ -97,6 +98,18 @@ static int pam_userpass_conv(int num_msg, linux_const struct pam_message **msg,
 #else
 	char *string;
 	int i;
+
+#if (defined(__sun) || defined(__hpux)) && \
+    !defined(LINUX_PAM) && !defined(_OPENPAM)
+/*
+ * Insist on only one message per call because of differences in the
+ * layout of the "msg" parameter. It can be an array of pointers to
+ * struct pam_message (Linux-PAM, OpenPAM) or a pointer to an array of
+ * struct pam_message (Sun PAM). We only fully support the former.
+ */
+	if (num_msg != 1)
+		return PAM_CONV_ERR;
+#endif
 
 	if (!(*resp = malloc(num_msg * sizeof(struct pam_response))))
 		return PAM_CONV_ERR;
@@ -153,7 +166,8 @@ struct passwd *auth_userpass(char *user, char *pass, int *known)
 	pam_handle_t *pamh;
 	pam_userpass_t userpass;
 	struct pam_conv conv = {pam_userpass_conv, &userpass};
-	char *template;
+	pam_item_t item;
+	lo_const char *template;
 	int status;
 
 	*known = 0;
@@ -178,12 +192,13 @@ struct passwd *auth_userpass(char *user, char *pass, int *known)
 		return NULL;
 	}
 
-	status = pam_get_item(pamh, PAM_USER, (pam_item_t *)&template);
+	status = pam_get_item(pamh, PAM_USER, &item);
 	if (status != PAM_SUCCESS) {
 		pam_end(pamh, status);
 		*known = is_user_known(user);
 		return NULL;
 	}
+	template = item;
 
 	template = strdup(template);
 

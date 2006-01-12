@@ -1,8 +1,8 @@
 Name: popa3d
-Version: 0.6.4.1
+Version: 1.0
 Release: alt1
 
-Summary: Tiny secure POP3 daemon
+Summary: Post Office Protocol (POP3) server
 License: LGPL
 Group: System/Servers
 Url: http://www.openwall.com/%name/
@@ -16,32 +16,30 @@ Source3: %name.xinetd
 # from http://www.openwall.com/presentations/Owl/
 Source4: %name.eps.gz
 
-Patch: %name-0.6.3-alt-params.patch
-
 PreReq: shadow-utils, /var/empty
 
 # Automatically added by buildreq on Fri May 31 2002
 BuildRequires: libpam-devel pam_userpass-devel
 
 %description
-This is a tiny Post Office Protocol version 3 (POP3) server
-with security as its primary design goal.
+popa3d is a tiny Post Office Protocol version 3 (POP3) server with
+security as its primary design goal.
 
 %prep
 %setup -q
-%patch -p1
-%__install -p -m644 $RPM_SOURCE_DIR/%name.eps.gz .
+install -pm644 %_sourcedir/%name-params.h params.h
+install -pm644 %_sourcedir/%name.eps.gz .
 
 %build
 make clean
 %make_build \
-	CFLAGS="$RPM_OPT_FLAGS %optflags_notraceback -DHAVE_PROGNAME" \
+	CFLAGS="%optflags %optflags_notraceback -DHAVE_PROGNAME" \
 	LIBS="-lpam -lpam_userpass"
 
 %install
-%__install -pD -m750 %name $RPM_BUILD_ROOT%_sbindir/%name
-%__install -pD -m600 %SOURCE2 $RPM_BUILD_ROOT%_sysconfdir/pam.d/%name
-%__install -pD -m640 %SOURCE3 $RPM_BUILD_ROOT%_sysconfdir/xinetd.d/%name
+install -pD -m750 %name %buildroot%_sbindir/%name
+install -pD -m600 %_sourcedir/%name.pamd %buildroot%_sysconfdir/pam.d/%name
+install -pD -m640 %_sourcedir/%name.xinetd %buildroot%_sysconfdir/xinetd.d/%name
 
 %post
 /usr/sbin/groupadd -r -f %name
@@ -55,6 +53,9 @@ make clean
 %doc %name.eps.gz
 
 %changelog
+* Thu Jan 05 2006 Dmitry V. Levin <ldv@altlinux.org> 1.0-alt1
+- Updated to 1.0.
+
 * Mon Jan 03 2005 Dmitry V. Levin <ldv@altlinux.org> 0.6.4.1-alt1
 - Updated to 0.6.4.1.
 
