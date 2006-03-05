@@ -2,8 +2,8 @@
 
 Summary: Post Office Protocol (POP3) server.
 Name: popa3d
-Version: 1.0
-Release: owl2
+Version: 1.0.1
+Release: owl1
 License: relaxed BSD and (L)GPL-compatible
 Group: System Environment/Daemons
 URL: http://www.openwall.com/popa3d/
@@ -74,6 +74,10 @@ fi
 %doc CHANGES CONTACT DESIGN LICENSE
 
 %changelog
+* Sun Mar 05 2006 Solar Designer <solar-at-owl.openwall.com> 1.0.1-owl1
+- Use sysconf(_SC_CLK_TCK) instead of CLK_TCK when _SC_CLK_TCK is known to be
+available or CLK_TCK is not.
+
 * Sat Oct 29 2005 Dmitry V. Levin <ldv-at-owl.openwall.com> 1.0-owl2
 - Changed PAM config file to include system-auth for PAM account
 management.
