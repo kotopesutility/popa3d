@@ -1,3 +1,9 @@
+	Changes made between 1.0.1 and 1.0.2 (2006/05/23).
+
+A couple of optimizations specific to x86-64 have been applied to the
+included MD5 routines.
+
+
 	Changes made between 1.0 and 1.0.1 (2006/03/07).
 
 Use sysconf(_SC_CLK_TCK) instead of CLK_TCK when _SC_CLK_TCK is known to

@@ -2,7 +2,7 @@
 
 Summary: Post Office Protocol (POP3) server.
 Name: popa3d
-Version: 1.0.1
+Version: 1.0.2
 Release: owl1
 License: relaxed BSD and (L)GPL-compatible
 Group: System Environment/Daemons
@@ -74,6 +74,10 @@ fi
 %doc CHANGES CONTACT DESIGN LICENSE
 
 %changelog
+* Tue May 23 2006 Solar Designer <solar-at-owl.openwall.com> 1.0.2-owl1
+- A couple of optimizations specific to x86-64 have been applied to the
+included MD5 routines.
+
 * Tue Mar 07 2006 Solar Designer <solar-at-owl.openwall.com> 1.0.1-owl1
 - Use sysconf(_SC_CLK_TCK) instead of CLK_TCK when _SC_CLK_TCK is known to be
 available or CLK_TCK is not.
