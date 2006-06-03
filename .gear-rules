@@ -2,4 +2,4 @@ gzip: *.eps
 copy: *.h
 copy: *.pamd
 copy: *.xinetd
-tar.bz2: popa3d
+tar: popa3d

@@ -1,3 +1,18 @@
+	Changes made between 1.0.1 and 1.0.2 (2006/05/23).
+
+A couple of optimizations specific to x86-64 have been applied to the
+included MD5 routines.
+
+
+	Changes made between 1.0 and 1.0.1 (2006/03/07).
+
+Use sysconf(_SC_CLK_TCK) instead of CLK_TCK when _SC_CLK_TCK is known to
+be available or CLK_TCK is not.  This is needed for portability to glibc
+2.3.90+ and possibly to other recent and future systems.
+
+Use socklen_t where appropriate.
+
+
 	Changes made between 0.6.4.1 and 1.0 (2005/05/26).
 
 Corrected the source code to not break C strict aliasing rules (this
@@ -101,4 +116,4 @@ code size.
 Added a popa3d(8) manual page based on the one Camiel Dobbelaar wrote
 for OpenBSD.
 
-$Id: CHANGES,v 1.7 2005/05/26 16:01:15 solar Exp $
+$Owl$

@@ -1,14 +1,15 @@
 Name: popa3d
-Version: 1.0
+Version: 1.0.2
 Release: alt1
 
 Summary: Post Office Protocol (POP3) server
 License: LGPL
 Group: System/Servers
 Url: http://www.openwall.com/%name/
+Packager: Dmitry V. Levin <ldv@altlinux.org>
 
 %define srcname %name-%version
-Source: ftp://ftp.openwall.com/pub/projects/%name/%name-%version.tar.bz2
+Source: ftp://ftp.openwall.com/pub/projects/%name/%name-%version.tar
 Source1: %name-params.h
 Source2: %name.pamd
 Source3: %name.xinetd
@@ -53,6 +54,9 @@ install -pD -m640 %_sourcedir/%name.xinetd %buildroot%_sysconfdir/xinetd.d/%name
 %doc %name.eps.gz
 
 %changelog
+* Sun Jun 04 2006 Dmitry V. Levin <ldv@altlinux.org> 1.0.2-alt1
+- Updated to 1.0.2.
+
 * Thu Jan 05 2006 Dmitry V. Levin <ldv@altlinux.org> 1.0-alt1
 - Updated to 1.0.
 

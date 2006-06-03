@@ -38,7 +38,7 @@ extern int do_pop_session(void);
 typedef volatile sig_atomic_t va_int;
 
 /*
- * Active POP sessions. Those that were started within the last MIN_DELAY
+ * Active POP sessions.  Those that were started within the last MIN_DELAY
  * seconds are also considered active (regardless of their actual state),
  * to allow for limiting the logging rate without throwing away critical
  * information about sessions that we could have allowed to proceed.
@@ -111,10 +111,10 @@ int main(void)
 	int true = 1;
 	int sock, new;
 	struct sockaddr_in addr;
-	int addrlen;
+	socklen_t addrlen;
 	int pid;
 	struct tms buf;
-	clock_t now, log;
+	clock_t min_delay, now, log;
 	int i, j, n;
 
 	if (do_pop_startup()) return 1;
@@ -152,6 +152,12 @@ int main(void)
 
 	setsid();
 
+#if defined(_SC_CLK_TCK) || !defined(CLK_TCK)
+	min_delay = MIN_DELAY * sysconf(_SC_CLK_TCK);
+#else
+	min_delay = MIN_DELAY * CLK_TCK;
+#endif
+
 	child_blocked = 1;
 	child_pending = 0;
 	signal(SIGCHLD, handle_child);
@@ -172,7 +178,7 @@ int main(void)
 		new = accept(sock, (struct sockaddr *)&addr, &addrlen);
 
 /*
- * I wish there was a portable way to classify errno's... In this case,
+ * I wish there were a portable way to classify errno's...  In this case,
  * it appears to be better to risk eating up the CPU on a fatal error
  * rather than risk terminating the entire service because of a minor
  * temporary error having to do with one particular connection attempt.
@@ -190,7 +196,7 @@ int main(void)
 				sessions[i].start = 0;
 			if (sessions[i].pid ||
 			    (sessions[i].start &&
-			    now - sessions[i].start < MIN_DELAY * CLK_TCK)) {
+			    now - sessions[i].start < min_delay)) {
 				if (sessions[i].addr.s_addr ==
 				    addr.sin_addr.s_addr)
 				if (++n >= MAX_SESSIONS_PER_SOURCE) break;
@@ -201,7 +207,7 @@ int main(void)
 		if (n >= MAX_SESSIONS_PER_SOURCE) {
 			if (!sessions[i].log ||
 			    now < sessions[i].log ||
-			    now - sessions[i].log >= MIN_DELAY * CLK_TCK) {
+			    now - sessions[i].log >= min_delay) {
 				syslog(SYSLOG_PRI_HI,
 					"%s: per source limit reached",
 					inet_ntoa(addr.sin_addr));
@@ -212,7 +218,7 @@ int main(void)
 
 		if (j < 0) {
 			if (!log ||
-			    now < log || now - log >= MIN_DELAY * CLK_TCK) {
+			    now < log || now - log >= min_delay) {
 				syslog(SYSLOG_PRI_HI,
 					"%s: sessions limit reached",
 					inet_ntoa(addr.sin_addr));
