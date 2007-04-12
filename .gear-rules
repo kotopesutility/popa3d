@@ -1,4 +1,4 @@
-gzip: *.eps
+copy: *.eps
 copy: *.h
 copy: *.pamd
 copy: *.xinetd

@@ -1,21 +1,21 @@
 Name: popa3d
 Version: 1.0.2
-Release: alt1
+Release: alt2
 
 Summary: Post Office Protocol (POP3) server
-License: LGPL
+License: GPL
 Group: System/Servers
-Url: http://www.openwall.com/%name/
+Url: http://www.openwall.com/popa3d/
 Packager: Dmitry V. Levin <ldv@altlinux.org>
 
-%define srcname %name-%version
-Source: ftp://ftp.openwall.com/pub/projects/%name/%name-%version.tar
-Source1: %name-params.h
-Source2: %name.pamd
-Source3: %name.xinetd
-# The dia source to %name.eps is available through the download link
+# ftp://ftp.openwall.com/pub/projects/popa3d/popa3d-%version.tar.gz
+Source: popa3d-%version.tar
+Source1: popa3d-params.h
+Source2: popa3d.pamd
+Source3: popa3d.xinetd
+# The dia source to popa3d.eps is available through the download link
 # from http://www.openwall.com/presentations/Owl/
-Source4: %name.eps.gz
+Source4: popa3d.eps
 
 PreReq: shadow-utils, /var/empty
 
@@ -28,8 +28,9 @@ security as its primary design goal.
 
 %prep
 %setup -q
-install -pm644 %_sourcedir/%name-params.h params.h
-install -pm644 %_sourcedir/%name.eps.gz .
+install -pm644 %_sourcedir/popa3d-params.h params.h
+install -pm644 %_sourcedir/popa3d.eps .
+bzip2 -9 *.eps
 
 %build
 make clean
@@ -38,22 +39,25 @@ make clean
 	LIBS="-lpam -lpam_userpass"
 
 %install
-install -pD -m750 %name %buildroot%_sbindir/%name
-install -pD -m600 %_sourcedir/%name.pamd %buildroot%_sysconfdir/pam.d/%name
-install -pD -m640 %_sourcedir/%name.xinetd %buildroot%_sysconfdir/xinetd.d/%name
+install -pD -m750 popa3d %buildroot%_sbindir/popa3d
+install -pD -m600 %_sourcedir/popa3d.pamd %buildroot%_sysconfdir/pam.d/popa3d
+install -pD -m640 %_sourcedir/popa3d.xinetd %buildroot%_sysconfdir/xinetd.d/popa3d
 
 %post
-/usr/sbin/groupadd -r -f %name
-/usr/sbin/useradd -r -g %name -d /dev/null -s /dev/null -n %name >/dev/null 2>&1 ||:
+/usr/sbin/groupadd -r -f popa3d
+/usr/sbin/useradd -r -g popa3d -d /dev/null -s /dev/null -n popa3d >/dev/null 2>&1 ||:
 
 %files
-%_sbindir/%name
-%config(noreplace) %_sysconfdir/pam.d/%name
+%_sbindir/popa3d
+%config(noreplace) %_sysconfdir/pam.d/popa3d
 %config(noreplace) %_sysconfdir/xinetd.d/*
 %doc CHANGES CONTACT DESIGN LICENSE VIRTUAL
-%doc %name.eps.gz
+%doc popa3d.eps.bz2
 
 %changelog
+* Thu Apr 12 2007 Dmitry V. Levin <ldv@altlinux.org> 1.0.2-alt2
+- Compressed documentation, reduced macro abuse in specfile.
+
 * Sun Jun 04 2006 Dmitry V. Levin <ldv@altlinux.org> 1.0.2-alt1
 - Updated to 1.0.2.
 
