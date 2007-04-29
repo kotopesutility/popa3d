@@ -1,6 +1,6 @@
 Name: popa3d
 Version: 1.0.2
-Release: alt2
+Release: alt3
 
 Summary: Post Office Protocol (POP3) server
 License: GPL
@@ -39,7 +39,7 @@ make clean
 	LIBS="-lpam -lpam_userpass"
 
 %install
-install -pD -m750 popa3d %buildroot%_sbindir/popa3d
+%make_install install DESTDIR=%buildroot SBINDIR=%_sbindir MANDIR=%_mandir
 install -pD -m600 %_sourcedir/popa3d.pamd %buildroot%_sysconfdir/pam.d/popa3d
 install -pD -m640 %_sourcedir/popa3d.xinetd %buildroot%_sysconfdir/xinetd.d/popa3d
 
@@ -49,12 +49,16 @@ install -pD -m640 %_sourcedir/popa3d.xinetd %buildroot%_sysconfdir/xinetd.d/popa
 
 %files
 %_sbindir/popa3d
+%_man8dir/popa3d.*
 %config(noreplace) %_sysconfdir/pam.d/popa3d
 %config(noreplace) %_sysconfdir/xinetd.d/*
 %doc CHANGES CONTACT DESIGN LICENSE VIRTUAL
 %doc popa3d.eps.bz2
 
 %changelog
+* Sun Apr 29 2007 Dmitry V. Levin <ldv@altlinux.org> 1.0.2-alt3
+- Packaged popa3d(8) manpage (#11651).
+
 * Thu Apr 12 2007 Dmitry V. Levin <ldv@altlinux.org> 1.0.2-alt2
 - Compressed documentation, reduced macro abuse in specfile.
 
