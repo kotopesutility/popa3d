@@ -1,7 +1,4 @@
 #%PAM-1.0
 auth     required	pam_userpass.so
-auth     include	system-auth-use_first_pass
-auth     required	pam_nologin.so
-account  include	system-auth
-password required	pam_deny.so
-session  required	pam_deny.so
+auth     include	common-login-use_first_pass
+account  include	common-login
