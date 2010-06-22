@@ -1,9 +1,9 @@
 Name: popa3d
 Version: 1.0.2
-Release: alt3
+Release: alt4
 
 Summary: Post Office Protocol (POP3) server
-License: GPL
+License: GPLv2+
 Group: System/Servers
 Url: http://www.openwall.com/popa3d/
 Packager: Dmitry V. Levin <ldv@altlinux.org>
@@ -39,9 +39,11 @@ make clean
 	LIBS="-lpam -lpam_userpass"
 
 %install
-%make_install install DESTDIR=%buildroot SBINDIR=%_sbindir MANDIR=%_mandir
-install -pD -m600 %_sourcedir/popa3d.pamd %buildroot%_sysconfdir/pam.d/popa3d
-install -pD -m640 %_sourcedir/popa3d.xinetd %buildroot%_sysconfdir/xinetd.d/popa3d
+%makeinstall_std SBINDIR=%_sbindir MANDIR=%_mandir
+install -pD -m600 %_sourcedir/popa3d.pamd \
+	%buildroot%_sysconfdir/pam.d/popa3d
+install -pD -m640 %_sourcedir/popa3d.xinetd \
+	%buildroot%_sysconfdir/xinetd.d/popa3d
 
 %post
 /usr/sbin/groupadd -r -f popa3d
@@ -56,6 +58,9 @@ install -pD -m640 %_sourcedir/popa3d.xinetd %buildroot%_sysconfdir/xinetd.d/popa
 %doc popa3d.eps.bz2
 
 %changelog
+* Wed Jun 23 2010 Dmitry V. Levin <ldv@altlinux.org> 1.0.2-alt4
+- /etc/pam.d/popa3d: Changed to use common-login.
+
 * Sun Apr 29 2007 Dmitry V. Levin <ldv@altlinux.org> 1.0.2-alt3
 - Packaged popa3d(8) manpage (#11651).
 
