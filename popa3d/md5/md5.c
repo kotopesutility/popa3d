@@ -1,18 +1,38 @@
 /*
- * This is an OpenSSL-compatible implementation of the RSA Data Security,
- * Inc. MD5 Message-Digest Algorithm.
+ * This is an OpenSSL-compatible implementation of the RSA Data Security, Inc.
+ * MD5 Message-Digest Algorithm (RFC 1321).
  *
- * Written by Solar Designer <solar at openwall.com> in 2001, and placed
- * in the public domain.  There's absolutely no warranty.
+ * Homepage:
+ * http://openwall.info/wiki/people/solar/software/public-domain-source-code/md5
  *
- * This differs from Colin Plumb's older public domain implementation in
- * that no 32-bit integer data type is required, there's no compile-time
- * endianness configuration, and the function prototypes match OpenSSL's.
- * The primary goals are portability and ease of use.
+ * Author:
+ * Alexander Peslyak, better known as Solar Designer <solar at openwall.com>
  *
- * This implementation is meant to be fast, but not as fast as possible.
- * Some known optimizations are not included to reduce source code size
- * and avoid compile-time configuration.
+ * This software was written by Alexander Peslyak in 2001.  No copyright is
+ * claimed, and the software is hereby placed in the public domain.
+ * In case this attempt to disclaim copyright and place the software in the
+ * public domain is deemed null and void, then the software is
+ * Copyright (c) 2001 Alexander Peslyak and it is hereby released to the
+ * general public under the following terms:
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted.
+ *
+ * There's ABSOLUTELY NO WARRANTY, express or implied.
+ *
+ * (This is a heavily cut-down "BSD license".)
+ *
+ * This differs from Colin Plumb's older public domain implementation in that
+ * no exactly 32-bit integer data type is required (any 32-bit or wider
+ * unsigned integer data type will do), there's no compile-time endianness
+ * configuration, and the function prototypes match OpenSSL's.  No code from
+ * Colin Plumb's implementation has been reused; this comment merely compares
+ * the properties of the two independent implementations.
+ *
+ * The primary goals of this implementation are portability and ease of use.
+ * It is meant to be fast, but not as fast as possible.  Some known
+ * optimizations are not included to reduce source code size and avoid
+ * compile-time configuration.
  */
 
 #ifndef HAVE_OPENSSL
@@ -24,12 +44,14 @@
 /*
  * The basic MD5 functions.
  *
- * F is optimized compared to its RFC 1321 definition just like in Colin
- * Plumb's implementation.
+ * F and G are optimized compared to their RFC 1321 definitions for
+ * architectures that lack an AND-NOT instruction, just like in Colin Plumb's
+ * implementation.
  */
 #define F(x, y, z)			((z) ^ ((x) & ((y) ^ (z))))
 #define G(x, y, z)			((y) ^ ((z) & ((x) ^ (y))))
-#define H(x, y, z)			((x) ^ (y) ^ (z))
+#define H(x, y, z)			(((x) ^ (y)) ^ (z))
+#define H2(x, y, z)			((x) ^ ((y) ^ (z)))
 #define I(x, y, z)			((y) ^ ((x) | ~(z)))
 
 /*
@@ -44,7 +66,7 @@
  * SET reads 4 input bytes in little-endian byte order and stores them
  * in a properly aligned word in host byte order.
  *
- * The check for little-endian architectures which tolerate unaligned
+ * The check for little-endian architectures that tolerate unaligned
  * memory accesses is just an optimization.  Nothing will break if it
  * doesn't work.
  */
@@ -125,21 +147,21 @@ static void *body(MD5_CTX *ctx, void *data, unsigned long size)
 
 /* Round 3 */
 		STEP(H, a, b, c, d, GET(5), 0xfffa3942, 4)
-		STEP(H, d, a, b, c, GET(8), 0x8771f681, 11)
+		STEP(H2, d, a, b, c, GET(8), 0x8771f681, 11)
 		STEP(H, c, d, a, b, GET(11), 0x6d9d6122, 16)
-		STEP(H, b, c, d, a, GET(14), 0xfde5380c, 23)
+		STEP(H2, b, c, d, a, GET(14), 0xfde5380c, 23)
 		STEP(H, a, b, c, d, GET(1), 0xa4beea44, 4)
-		STEP(H, d, a, b, c, GET(4), 0x4bdecfa9, 11)
+		STEP(H2, d, a, b, c, GET(4), 0x4bdecfa9, 11)
 		STEP(H, c, d, a, b, GET(7), 0xf6bb4b60, 16)
-		STEP(H, b, c, d, a, GET(10), 0xbebfbc70, 23)
+		STEP(H2, b, c, d, a, GET(10), 0xbebfbc70, 23)
 		STEP(H, a, b, c, d, GET(13), 0x289b7ec6, 4)
-		STEP(H, d, a, b, c, GET(0), 0xeaa127fa, 11)
+		STEP(H2, d, a, b, c, GET(0), 0xeaa127fa, 11)
 		STEP(H, c, d, a, b, GET(3), 0xd4ef3085, 16)
-		STEP(H, b, c, d, a, GET(6), 0x04881d05, 23)
+		STEP(H2, b, c, d, a, GET(6), 0x04881d05, 23)
 		STEP(H, a, b, c, d, GET(9), 0xd9d4d039, 4)
-		STEP(H, d, a, b, c, GET(12), 0xe6db99e5, 11)
+		STEP(H2, d, a, b, c, GET(12), 0xe6db99e5, 11)
 		STEP(H, c, d, a, b, GET(15), 0x1fa27cf8, 16)
-		STEP(H, b, c, d, a, GET(2), 0xc4ac5665, 23)
+		STEP(H2, b, c, d, a, GET(2), 0xc4ac5665, 23)
 
 /* Round 4 */
 		STEP(I, a, b, c, d, GET(0), 0xf4292244, 6)
