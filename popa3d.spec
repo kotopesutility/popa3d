@@ -34,7 +34,7 @@ bzip2 -9 *.eps
 %build
 make clean
 %make_build \
-	CFLAGS="%optflags %optflags_notraceback -DHAVE_PROGNAME" \
+	CFLAGS="$RPM_OPT_FLAGS %optflags_notraceback $(getconf LFS_CFLAGS) -DHAVE_PROGNAME" \
 	LIBS="-lpam -lpam_userpass" \
 	LDFLAGS=
 
