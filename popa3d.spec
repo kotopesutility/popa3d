@@ -35,7 +35,8 @@ bzip2 -9 *.eps
 make clean
 %make_build \
 	CFLAGS="%optflags %optflags_notraceback -DHAVE_PROGNAME" \
-	LIBS="-lpam -lpam_userpass"
+	LIBS="-lpam -lpam_userpass" \
+	LDFLAGS=
 
 %install
 %makeinstall_std SBINDIR=%_sbindir MANDIR=%_mandir
