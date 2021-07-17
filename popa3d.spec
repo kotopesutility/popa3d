@@ -45,6 +45,10 @@ install -pD -m600 %_sourcedir/popa3d.pamd \
 install -pD -m640 %_sourcedir/popa3d.xinetd \
 	%buildroot%_sysconfdir/xinetd.d/popa3d
 
+%define _unpackaged_files_terminate_build 1
+%define _stripped_files_terminate_build 1
+%set_verify_elf_method strict
+
 %post
 /usr/sbin/groupadd -r -f popa3d
 /usr/sbin/useradd -r -g popa3d -d /dev/null -s /dev/null -n popa3d >/dev/null 2>&1 ||:
