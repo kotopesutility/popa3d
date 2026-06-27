@@ -1,6 +1,6 @@
 Name: popa3d
 Version: 1.0.3
-Release: alt2
+Release: alt3
 
 Summary: Post Office Protocol (POP3) server
 License: GPLv2+
@@ -62,6 +62,9 @@ install -pD -m640 %_sourcedir/popa3d.xinetd \
 %doc popa3d.eps.bz2
 
 %changelog
+* Sat Jun 27 2026 Daniel Zagaynov <kotopesutility@altlinux.org> 1.0.3-alt3
+- Fix build with gcc-15.
+
 * Sat Jul 17 2021 Dmitry V. Levin <ldv@altlinux.org> 1.0.3-alt2
 - Fixed lfs=strict build on 32-bit systems.
 - Enabled debuginfo.
